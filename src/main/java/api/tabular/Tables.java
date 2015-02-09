@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 import lombok.NonNull;
 import api.tabular.Dsl.NameClause;
@@ -176,9 +175,7 @@ public class Tables {
 			@Override
 			public Table rows(String[]... rows) {
 				
-				Function<String[],Row> array2row = $->list2row(cols,asList($));
-				
-				List<Row> rowlist = asList(rows).stream().map(array2row).collect(toList());
+				List<Row> rowlist = asList(rows).stream().map($->list2row(cols,asList($))).collect(toList());
 				
 				return rows(rowlist);
 			}
