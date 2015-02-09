@@ -1,22 +1,17 @@
 package api.tabular.utils;
 
 
-import static api.tabular.Properties.*;
 import api.tabular.Properties;
 import api.tabular.Property;
 
 public interface Described<SELF> {
 
-	Properties properties = props();
-	
-	default Properties properties() {
-		return properties;
-	}
+	Properties properties();
 	
 	//reusable convenience method to increase fluency of implementors
-	default SELF add(Property prop) {
+	default SELF add(Property ... props) {
 		
-		properties.add(prop);
+		properties().add(props);
 		
 		//strategically unsafe: relies on implementors to pass their own type
 		@SuppressWarnings("unchecked")

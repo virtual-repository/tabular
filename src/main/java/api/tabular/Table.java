@@ -30,9 +30,6 @@ public interface Table extends Streamable<Row>, Described<Table> {
 	 * @return the materialised table.
 	 */
 	Table materialise();
-
-	
-	
 		
 	
 }

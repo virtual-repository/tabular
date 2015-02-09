@@ -8,28 +8,69 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import lombok.NonNull;
-import api.tabular.Dsl.ColClause;
 import api.tabular.Dsl.NameClause;
 import api.tabular.Dsl.RowClause;
+import api.tabular.Dsl.StreamClause;
+import api.tabular.Dsl.TableClause;
 import api.tabular.Dsl.ValueClause;
 
 public class Tables {
 
-	
+	/**
+	 * A new property.
+	 */
 	public static Property prop(String name) {
-		return new Property(name);
+		return Property.prop(name);
 	}
 	
+	/**
+	 * A new property.
+	 */
+	public static Property prop(String name, Object value) {
+		return Property.prop(name,value);
+	}
 	
+	/**
+	 * A new group of properties.
+	 */
+	public static Properties props() {
+		return Properties.props();
+	}
+	
+	/**
+	 * A new group of properties.
+	 */
+	public static Properties props(Property ... properties) {
+		return Properties.props(properties);
+	}
+	
+	/**
+	 * A new column.
+	 */
 	public static Column col(String name) {
 		return new Column(name);
 	}
 	
+	/**
+	 * New {@link Csv} directives.
+	 */
+	public static Csv csv() {
+		return Csv.csv();
+	}
 	
 	/**
-	 * Creates a row.
+	 * A new array
+	 ***/
+	@SafeVarargs
+	public static <T> T[] $(T ... val) {
+		return val;
+	}
+	
+	/**
+	 * A new row.
 	 */
 	public static NameClause row() {
 		
@@ -40,6 +81,11 @@ public class Tables {
 			@Override
 			public Row end() {
 				return new Row(map);
+			}
+			
+			@Override
+			public NameClause col(String col, String val) {
+				return col(col).is(val);
 			}
 			
 			@Override
@@ -55,57 +101,60 @@ public class Tables {
 			public ValueClause col(Column col) {
 				return col(col.name());
 			}
+			
+			@Override
+			public NameClause col(Column col, String val) {
+				return col(col).is(val);
+			}
 		}; 
 		
 		return new $Clause();
 	}
 	
-
+	
 	/**
-	 * Creates a table from one ore more arrays.
-	 * @param cols an array of column names
-	 * @param rows zero or more arrays of row values
-	 * @return the table
+	 * Creates a table with columns and rows.
 	 */
-	public static Table table(@NonNull String[] cols, @NonNull String[] ... rows) {
+	public static Table table(String[] cols, String[]... rows) {
 		
-		RowClause rclause = null;
-		
-		if (rows.length>0)
-			for (int i=0; i<rows.length;i++)
-				rclause = rclause==null? table().cols(cols).row(rows[i]) : rclause.row(rows[i]);
-		
-		return rclause.end();
+		return table().with(cols, rows);
 	}
 	
 	/**
-	 * Generates arrays for fluency of {@link #table(String[], String[]...)}.
-	 *
-	 **/
-	public static String[] $$(String ... val) {
-		return val;
-	}
-	
-	public static ColClause table() {
+	 * Creates a table.
+	 */
+	public static TableClause table() {
 		
 		
 		final List<Column> cols = new ArrayList<>();
 		
-		class $Clause implements ColClause {
+		class $Clause implements TableClause {
 			
 			@Override
-			public ColClause cols(@NonNull Column... $) {
+			public Table with(String[] cols, String[]... rows) {
+				return cols(cols).rows(rows);
+			}
+			
+			@Override
+			public StreamClause from(Csv csv) {
+				
+				return $->new CsvTable(csv, $);
+				
+			}
+			
+			@Override
+			public TableClause cols(@NonNull Column... $) {
 				return cols(asList($));
 			}
 			
 			@Override
-			public ColClause cols(@NonNull Iterable<Column> $) {
+			public TableClause cols(@NonNull Iterable<Column> $) {
 				$.forEach(cols::add);
 				return this;
 			}
 			
 			@Override
-			public ColClause cols(@NonNull String... $) {
+			public TableClause cols(@NonNull String... $) {
 				return cols(asList($).stream().map(name->col(name)).collect(toList()));
 			}
 			
@@ -125,7 +174,22 @@ public class Tables {
 			}
 			
 			@Override
+			public Table rows(String[]... rows) {
+				
+				Function<String[],Row> array2row = $->list2row(cols,asList($));
+				
+				List<Row> rowlist = asList(rows).stream().map(array2row).collect(toList());
+				
+				return rows(rowlist);
+			}
+			
+			@Override
 			public RowClause row(@NonNull String... vals) {
+				return row(asList(vals));
+			}
+			
+			@Override
+			public RowClause row(@NonNull Iterable<String> vals) {
 				
 				List<Row> rows = new ArrayList<Row>();
 				
@@ -134,15 +198,13 @@ public class Tables {
 					@Override
 					public RowClause row(@NonNull String... vals) {
 						
-						NameClause row = Tables.row();
-						
-						Iterator<String> it = asList(vals).iterator();
+						return row(asList(vals));
+					}
 					
-						for (Column col : cols)
-							if (it.hasNext())
-								row.col(col).is(it.next());
-						
-						rows.add(row.end());
+					@Override
+					public RowClause row(Iterable<String> vals) {
+
+						rows.add(list2row(cols,vals));
 						
 						return new $RowClause();
 					}
@@ -157,11 +219,24 @@ public class Tables {
 				return new $RowClause().row(vals);
 			}
 		}
+			
+			return new $Clause();
+			
+		}
 		
-		return new $Clause();
+	
+	
+	private static Row list2row(List<Column> cols, Iterable<String> vals) {
 		
+		NameClause row = Tables.row();
+		
+		Iterator<String> it = vals.iterator();
+	
+		for (Column col : cols)
+			if (it.hasNext())
+				row.col(col).is(it.next());
+		
+		return row.end();
 	}
-	
-	
 
 }

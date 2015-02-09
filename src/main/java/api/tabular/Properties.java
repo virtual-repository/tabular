@@ -3,6 +3,7 @@ package api.tabular;
 import static java.util.Collections.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -30,20 +31,34 @@ public class Properties implements Streamable<Property> {
 		return properties.values().iterator();
 	}
 	
+	/**
+	 * Creates with some initial properties.
+	 */
+	public static Properties props(@NonNull Property ... properties) {
+		return props().add(properties);
+	}
 	
-	public Properties add(@NonNull Property property) {
+	public Properties add(@NonNull Property ... props) {
 		
-		properties.put(property.name(),property);
+		Arrays.asList(props).stream().forEach($->{
+			properties.put($.name(),$);
+		});
+
 		
 		return this;
 	}
 
-	public boolean contains(@NonNull String name) {
+	public boolean has(@NonNull Properties props) {
+		
+		return props.stream().allMatch(this::has);
+	}
+	
+	public boolean has(@NonNull String name) {
 		
 		return this.properties.containsKey(name);
 	}
 	
-	public boolean contains(@NonNull Property p) {
+	public boolean has(@NonNull Property p) {
 		
 		return this.properties.containsValue(p);
 	}
@@ -69,7 +84,7 @@ public class Properties implements Streamable<Property> {
 	 * 
 	 * @throws IllegalStateException if a property with a given name does not exist in this collection
 	 */
-	public Property lookup(@NonNull String name) {
+	public Property prop(@NonNull String name) {
 
 		Property property = this.properties.get(name);
 

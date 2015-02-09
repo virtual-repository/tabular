@@ -1,5 +1,6 @@
 package api.tabular;
 
+import java.io.InputStream;
 import java.util.Iterator;
 
 
@@ -18,6 +19,16 @@ public class Dsl {
 		ValueClause col(Column col);
 		
 		/**
+		 * Adds a column to the row.
+		 */
+		NameClause col(Column col,String val);
+
+		/**
+		 * Adds a column to the row.
+		 */
+		NameClause col(String col,String val);
+
+		/**
 		 * Marks the end of the row.
 		 */
 		Row end();
@@ -33,22 +44,35 @@ public class Dsl {
 	}
 	
 	
-	public static interface ColClause {
+	public static interface TableClause {
+
+		/**
+		 * Creates an instance from columns and rows.
+		 * 
+		 * */
+		Table with(String[] cols, String[] ... rows);
+		
+		/**
+		 * Creates an instance from  a given {@link Csv} dataset.
+		 * @see CsvTable#CsvTable(Csv, InputStream)
+		 */
+		StreamClause from(Csv csv);
+		
+
+		/**
+		 * Adds one or more columns to the table.
+		 */
+		TableClause cols(Column ... cols);
 		
 		/**
 		 * Adds one or more columns to the table.
 		 */
-		ColClause cols(Column ... cols);
-		
-		/**
-		 * Adds one or more columns to the table.
-		 */
-		ColClause cols(String ... cols);
+		TableClause cols(String ... cols);
 		
 		/**
 		 * Adds columns to the table.
 		 */
-		ColClause cols(Iterable<Column> cols);
+		TableClause cols(Iterable<Column> cols);
 		
 		/**
 		 * Adds one or more rows to the table.
@@ -66,9 +90,19 @@ public class Dsl {
 		Table rows(Iterator<Row> rows);
 		
 		/**
+		 * Adds rows to the table.
+		 */
+		Table rows(String[] ... rows);
+		
+		/**
 		 * Adds a row to the table.
 		 */
 		RowClause row(String ... vals);
+		
+		/**
+		 * Adds a row to the table.
+		 */
+		RowClause row(Iterable<String> vals);
 		
 	}
 	
@@ -80,10 +114,25 @@ public class Dsl {
 		RowClause row(String ... vals);
 		
 		/**
+		 * Adds a row to the table.
+		 */
+		RowClause row(Iterable<String> vals);
+		
+		/**
 		 * Marks the end of the table.
 		 * @return
 		 */
 		Table end();
+		
+	}
+	
+	public static interface StreamClause {
+		
+		/**
+		 * Provides a stream with the CSV data.
+		 */
+		Table in(InputStream stream);
+		
 		
 	}
 }

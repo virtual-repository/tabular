@@ -1,24 +1,24 @@
 package api.tabular;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 /**
- * A named property with a value and a description.
+ * A named property with a mutable, typed value.
  */
 @Data
 @ToString(of={"name","value"})
-@RequiredArgsConstructor
+@RequiredArgsConstructor(staticName="prop")
+@AllArgsConstructor(staticName="prop")
 public class Property {
 
 	@NonNull
 	private final String name;
 	
 	private Object value;
-	private String description;
-	private boolean internal = false;
 	
 	/**
 	 * Returns the value of this property under a given type.

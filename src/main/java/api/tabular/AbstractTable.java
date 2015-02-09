@@ -1,6 +1,7 @@
 package api.tabular;
 
-import java.util.ArrayList;
+import static api.tabular.Properties.*;
+
 import java.util.List;
 
 import lombok.EqualsAndHashCode;
@@ -18,15 +19,11 @@ public abstract class AbstractTable implements Table, Streamable<Row> {
 	@NonNull
 	protected final List<Column> columns;
 	
+	private final Properties properties = props();
 	
 	public Table materialise() {
 		
-		List<Row> rows = new ArrayList<Row>();
-		
-		for (Row row : rows) 
-			rows.add(row);
-		
-		return new MaterialTable(columns(), rows);
+		return new MaterialTable(this);
 	}
 	
 	@Override

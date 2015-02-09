@@ -46,7 +46,6 @@ public class MaterialTable extends AbstractTable implements Table {
 	public Table materialise() {
 		return this;  //materialised by definition
 	}
-	
 
 	
 }
