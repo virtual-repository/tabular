@@ -90,9 +90,13 @@ public class Tables {
 			@Override
 			public ValueClause col(String name) {
 				
+				//in older java compilers, creating local classes inside closures creates infinite loops
+				//let's do it out here.
+				$Clause clause = new $Clause();
+				
 				return ($) -> {
 					map.put(name,$);
-					return new $Clause();
+					return clause;
 				};
 			}
 			
@@ -154,6 +158,7 @@ public class Tables {
 			
 			@Override
 			public TableClause cols(@NonNull String... $) {
+				
 				return cols(asList($).stream().map(name->col(name)).collect(toList()));
 			}
 			
