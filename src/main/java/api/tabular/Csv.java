@@ -137,11 +137,9 @@ public class Csv {
 		}
 		
 		table.stream().map(
-						$->$.stream()
-							.limit(columns.size())
-							.collect(toList()
+				        r->columns.stream().map(c->r.get(c)).collect(toList()
 					   ))
-					  .map($->$.toArray(new String[0]))
+					  .map(l->l.toArray(new String[0]))
 					  .forEachOrdered(csvwriter::writeNext);
 		
 		
