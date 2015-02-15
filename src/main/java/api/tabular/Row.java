@@ -1,8 +1,11 @@
 package api.tabular;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
@@ -11,7 +14,7 @@ import lombok.ToString;
 import api.tabular.utils.Streamable;
 
 /**
- * A row of a {@link Table}.
+ * A mutable row in a {@link Table}.
  */
 @RequiredArgsConstructor
 @EqualsAndHashCode
@@ -30,25 +33,57 @@ public class Row implements Streamable<String> {
 		return data.values().iterator();
 	}
 
+	/**
+	 * Returns the value of a given column, if any.
+	 */
 	public String get(String name) {
 		return data.get(name);
 	}
 	
-	public String get(Column column) {
-		return get(column.name());
+	/**
+	 * Returns all the columns.
+	 */
+	public Set<String> columns() {
+		return new HashSet<>(data.keySet());
 	}
 	
-	public Row add(String column, String value) {
+	/**
+	 * Adds a value of a given column.
+	 */
+	public Row set(String column, String value) {
 		data.put(column, value);
 		return this;
 	}
 	
-	public Row add(Row row) {
+	/**
+	 * Adds the values of another row.
+	 */
+	public Row merge(Row row) {
 		data.putAll(row.data);
 		return this;
 	}
 	
-	public Map<String, String> data() {
-		return new HashMap<>(data);
+	/**
+	 * Removes columns.
+	 */
+	public Row remove(String ... columns) {
+		return remove(Arrays.asList(columns));
 	}
+	
+	/**
+	 * Removes columns.
+	 */
+	public Row remove(Iterable<String> columns) {
+		for (String col : columns)
+			data.remove(col);
+		return this;
+	}
+	
+	/**
+	 * Removes the values of another row.
+	 */
+	public Row remove(Row row) {
+		return remove(data.keySet());
+	}
+	
 }

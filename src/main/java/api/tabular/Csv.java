@@ -137,8 +137,7 @@ public class Csv {
 		}
 		
 		table.stream().map(
-				        r->columns.stream().map(c->r.get(c)).collect(toList()
-					   ))
+				        r->columns.stream().map(c->r.get(c.name())).filter(c->c!=null && !c.isEmpty()).collect(toList()))
 					  .map(l->l.toArray(new String[0]))
 					  .forEachOrdered(csvwriter::writeNext);
 		
