@@ -1,6 +1,7 @@
 package api.tabular;
 
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Iterator;
 
 
@@ -132,6 +133,16 @@ public class Dsl {
 		 * Provides a stream with the CSV data.
 		 */
 		Table in(InputStream stream);
+		
+		/**
+		 * Provides a String with the CSV data.
+		 */
+		Table in(String data);
+		
+		/**
+		 * Provides a String with the CSV data file.
+		 */
+		Table in(Path file);
 		
 		
 	}
