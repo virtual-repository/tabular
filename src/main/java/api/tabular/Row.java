@@ -1,5 +1,6 @@
 package api.tabular;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -20,6 +21,10 @@ public class Row implements Streamable<String> {
 	@NonNull
 	private Map<String,String> data;
 	
+	public Row() {
+		this(new HashMap<>());
+	}
+	
 	@Override
 	public Iterator<String> iterator() {
 		return data.values().iterator();
@@ -31,5 +36,19 @@ public class Row implements Streamable<String> {
 	
 	public String get(Column column) {
 		return get(column.name());
+	}
+	
+	public Row add(String column, String value) {
+		data.put(column, value);
+		return this;
+	}
+	
+	public Row add(Row row) {
+		data.putAll(row.data);
+		return this;
+	}
+	
+	public Map<String, String> data() {
+		return new HashMap<>(data);
 	}
 }

@@ -134,7 +134,8 @@ public class CsvTable extends AbstractTable {
 				}
 					
 			for (int i = 0; i < csv.columns().size(); i++)
-				data.put(columns.get(i).name(), row[i]);
+				if (i<row.length)
+					data.put(columns.get(i).name(), row[i]);
 
 			return new Row(data);
 		}
