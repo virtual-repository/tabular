@@ -159,7 +159,7 @@ public class Tables {
 					}
 					
 					@Override @SneakyThrows
-					public Table in(Path file) {
+					public Table at(Path file) {
 						return new CsvTable(csv,new FileInputStream(file.toFile()));
 					}
 				};

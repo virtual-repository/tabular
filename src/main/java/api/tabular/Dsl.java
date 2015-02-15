@@ -142,7 +142,7 @@ public class Dsl {
 		/**
 		 * Provides a String with the CSV data file.
 		 */
-		Table in(Path file);
+		Table at(Path file);
 		
 		
 	}
