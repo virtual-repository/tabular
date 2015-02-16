@@ -1,7 +1,9 @@
 package api.tabular.utils;
 
+import static api.tabular.TableUtils.*;
+
+import java.util.function.Consumer;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 
 public interface Streamable<T> extends Iterable<T> {
@@ -11,7 +13,7 @@ public interface Streamable<T> extends Iterable<T> {
 	 */
 	default Stream<T> stream() {
 		
-		return stream(false);
+		return streamof(this,false);
 	}
 	
 
@@ -19,9 +21,17 @@ public interface Streamable<T> extends Iterable<T> {
 	 * Returns a sequential stream of the value associated with this type.
 	 * @param parallel <code>true</code> if the stream is to be consumed in parallel, <code>false</code> otherwise.
 	 */
-	default Stream<T> stream(boolean parallel) {
+	default Stream<T> parallelStream() {
 
-		return StreamSupport.<T>stream(this.spliterator(), parallel);
+		return streamof(this, true);
+	}
+	
+	/**
+	 * @see Stream#forEach(Consumer)
+	 */
+	default void forEach(Consumer<? super T> consumer) {
+	
+		stream().forEach(consumer);
 	}
 	
 	

@@ -185,7 +185,12 @@ public class TableUtils {
 	
 	public static <T> Stream<T> streamof(Iterable<T> vals) {
 		
-		return stream(vals.spliterator(),false);
+		return streamof(vals,false);
+	}
+	
+	public static <T> Stream<T> streamof(Iterable<T> vals, boolean parallel) {
+		
+		return stream(vals.spliterator(),parallel);
 	}
 	
 	private static String join(Stream<String> vals) {
