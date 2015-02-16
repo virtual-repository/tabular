@@ -185,12 +185,12 @@ public class Tables {
 			
 			@Override
 			public Table rows(@NonNull Row... $) {
-				return new MaterialTable(cols,asList($));
+				return new SimpleTable(cols,asList($));
 			}
 			
 			@Override
 			public Table rows(@NonNull Iterable<Row> $) {
-				return new MaterialTable(cols,$);
+				return new SimpleTable(cols,$);
 			}
 			
 			@Override
@@ -235,7 +235,7 @@ public class Tables {
 					@Override
 					public Table end() {
 						
-						return new MaterialTable(cols,rows);
+						return new SimpleTable(cols,rows);
 					}
 				}
 				

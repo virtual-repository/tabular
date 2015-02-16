@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 /**
- * A named property with a mutable, typed value.
+ * A named property with a mutable, arbitrarily typed value.
  */
 @Data
 @ToString(of={"name","value"})
@@ -22,9 +22,8 @@ public class Property {
 	
 	/**
 	 * Returns the value of this property under a given type.
-	 * @return the value
 	 * 
-	 * @throws IllegalStateException if the value cannot be returned under the given type.
+	 * @throws IllegalStateException if the value does not have the given type.
 	 */
 	public <S> S as(Class<S> type) {
 		
@@ -37,8 +36,6 @@ public class Property {
 	
 	/**
 	 * Returns <code>true</code> if the value of this property has a given type.
-	 * @param type the type
-	 * @return <code>true</code> if the value of this property has a given type
 	 */
 	public boolean is(Class<?> type) {
 		return type.isInstance(value());

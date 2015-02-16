@@ -18,45 +18,97 @@ import api.tabular.Table;
 
 public class ApiTest {
 
-	
+	//test with DSL compromises test modularity and convenience.
 	
 	@Test
-	public void base_apis() {
-		
-		//dsl
+	public void property() {
+
 		Property p = prop("n","v");
 		
 		assertEquals(p,prop("n","v"));
 		
-		//////////
-	
-		Property p2 = prop("n2").value("v2");
-		
-		Properties ps = props(p,p2);
-	
-		assertEquals(ps,props().add(p,p2));
-		
-		assertEquals(2,ps.size());
-		assertFalse(ps.empty());
-		
-		assertTrue(ps.has(p));
-		assertTrue(ps.has(p.name()));
-		assertTrue(ps.has(ps));
-		
-		assertEquals(p,ps.prop("n"));
-		
-		///////////
-		
-		Column col = col("c").add(p,p2);
-		
-		assertEquals(col, col("c").add(p,p2));
+		assertTrue(p.is(String.class));
+		assertEquals("v",p.as(Object.class));
+		assertEquals("v",p.value());
+		assertEquals("n",p.name());
 
-		Column col2 = col("c2");
+		p.value("new");
+		assertEquals("new",p.value());
+	}
+	
+	@Test
+	public void properties() {
+
+		Property p1 = prop("n1","v1");
+		Property p2 = prop("n2","v2");
 		
-		Row r = row().col(col,"v1").col(col2,"v2").end();
-		Row r2 = row().col(col,"v1").col(col2,"v2").end();
+		Properties ps = props(p1,p2);
 		
-		assertEquals(r, r2);
+		assertEquals(ps,props(p1,p2));
+		
+		assertTrue(ps.has(p1,p2));
+		assertTrue(ps.has(p1.name(),p2.name()));
+		assertTrue(ps.has(props(p1,p2)));
+		
+		Property p3 = prop("n3","v3");
+
+		assertFalse(ps.has(p3));
+		
+		try {
+			ps.prop("bad");
+			fail();
+		}
+		catch(IllegalStateException matternot) {}
+		
+		assertEquals(prop("bad","default"),ps.prop("bad", "default"));
+		
+		Property p4 = prop("n4","v4");
+		
+		ps.add(p3,p4);
+		
+		assertEquals(ps,props(p1,p2,p3,p4));
+		
+		ps.remove(p1,p3);
+		
+		assertEquals(ps,props(p4,p2));
+		
+		ps.remove(props(p2,p4));
+		
+		assertTrue(ps.empty());
+
+
+	}
+	
+	@Test
+	public void columns() {
+		
+		Column c = col("c");
+	
+		assertEquals("c", c.name());
+		assertEquals(c, col("c"));
+		
+	}
+	
+	@Test
+	public void rows() {
+		
+		Row r = row().col("c1","v1").col("c2","v2").end();
+		
+		assertEquals("v1",r.get("c1"));
+		assertNull(r.get("c3"));
+		assertEquals("default",r.getOr("c3","default"));
+		assertTrue(r.has("c1","c2"));
+		assertTrue(r.has(col("c2"),col("c1")));
+		
+		assertEquals(r, row().col(col("c2"),"v2").col(col("c1"),"v1").end());
+
+		assertEquals(row().col("c1","changed").col("c2","v2").col("c3","v3").end(), 
+					 r.merge(row().col("c3","v3").col("c1","changed").end()));
+				
+		assertEquals("newvalue",r.set("c2","newvalue").get("c2"));
+		
+		assertTrue(r.remove("c2","c3").size()==1);
+		
 	}
 	
 	@Test

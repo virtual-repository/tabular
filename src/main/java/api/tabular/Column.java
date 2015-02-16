@@ -4,15 +4,13 @@ import static api.tabular.Properties.*;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import api.tabular.utils.Described;
 
 /**
- * A column of a {@link Table}.
- * 
+ * A column of a {@link Table}, with optional {@link Properties}.
  */
 @RequiredArgsConstructor
 @Data
-public class Column implements Described<Column> {
+public class Column {
 	
 	@NonNull
 	private final String name;

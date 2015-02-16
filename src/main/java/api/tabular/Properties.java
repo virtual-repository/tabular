@@ -1,13 +1,17 @@
 package api.tabular;
 
+import static api.tabular.TableUtils.*;
+import static java.lang.String.*;
+import static java.util.Arrays.*;
 import static java.util.Collections.*;
+import static java.util.stream.Collectors.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.Function;
 
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -15,7 +19,7 @@ import lombok.NonNull;
 import api.tabular.utils.Streamable;
 
 /**
- * A collection of uniquely named {@link Properties}.
+ * A mutable group of uniquely named {@link Property}s.
  * 
  */
 @NoArgsConstructor(staticName="props")
@@ -32,15 +36,27 @@ public class Properties implements Streamable<Property> {
 	}
 	
 	/**
-	 * Creates with some initial properties.
+	 * Creates a group of initial properties.
 	 */
 	public static Properties props(@NonNull Property ... properties) {
 		return props().add(properties);
 	}
 	
+	/**
+	 * Add given properties to this group.
+	 */
 	public Properties add(@NonNull Property ... props) {
 		
-		Arrays.asList(props).stream().forEach($->{
+		return add(asList(props));
+	}
+	
+	
+	/**
+	 * Add given properties to this group.
+	 */
+	public Properties add(@NonNull Iterable<Property> props) {
+		
+		streamof(props).forEach($->{
 			properties.put($.name(),$);
 		});
 
@@ -48,40 +64,94 @@ public class Properties implements Streamable<Property> {
 		return this;
 	}
 
+	/**
+	 * Returns <code>true</code> if there are given properties in this group.
+	 */
 	public boolean has(@NonNull Properties props) {
 		
-		return props.stream().allMatch(this::has);
+		return has((Iterable<Property>)props);
 	}
 	
-	public boolean has(@NonNull String name) {
-		
-		return this.properties.containsKey(name);
-	}
-	
-	public boolean has(@NonNull Property p) {
-		
-		return this.properties.containsValue(p);
-	}
-
 	/**
-	 * Removes a given property.
-	 * 
-	 * @param name the name of the property
-	 * 
-	 * @throws IllegalStateException if a property with the given name does not exist in this collection
+	 * Returns <code>true</code> if there are given properties in this group.
 	 */
-	public void remove(@NonNull String name) {
-
-		if (this.properties.remove(name) == null)
-			throw new IllegalStateException("unknown property " + name);
+	public boolean has(@NonNull String ... names) {
+		
+		return has(asList(names));
+	}
+	
+	/**
+	 * Returns <code>true</code> if there are given properties in this group.
+	 */
+	//very pragmatic choice, cannot overload iterable here, pick next best thing.
+	public boolean has(@NonNull Collection<String> names) {
+		
+		return streamof(names).allMatch(this.properties::containsKey);
+	}
+	
+	/**
+	 * Returns <code>true</code> if there are given properties in this group.
+	 */
+	public boolean has(@NonNull Property ... ps) {
+		
+		return has(asList(ps));
+	}
+	
+	/**
+	 * Returns <code>true</code> if there are given properties in this group.
+	 */
+	public boolean has(@NonNull Iterable<Property> ps) {
+		
+		return streamof(ps).allMatch(this.properties::containsValue);
 	}
 
 	/**
-	 * Returns a given property in this collection.
-	 * 
-	 * @param name the name of the property
-	 * @return the property
-	 * 
+	 * Removes given properties from this group, if they exist.
+	 */
+	public Properties remove(@NonNull String ... names) {
+
+		return remove(asList(names));
+	}
+	
+	/**
+	 * Removes given properties from this group, if they exist.
+	 */
+	public Properties remove(@NonNull Collection<String> names) {
+
+		names.forEach(this.properties::remove);
+		
+		return this;
+	}
+	
+	/**
+	 * Removes given properties from this group, if they exist.
+	 */
+	public Properties remove(@NonNull Iterable<Property> properties) {
+
+		return remove(streamof(properties).map(Property::name).collect(toList()));
+	}
+	
+	/**
+	 * Removes given properties from this group, if they exist.
+	 */
+	public Properties remove(@NonNull Properties properties) {
+
+		return remove((Iterable<Property>) properties);
+	}
+	
+	
+	/**
+	 * Removes given properties from this group, if they exist.
+	 */
+	public Properties remove(@NonNull Property ... properties) {
+
+		return remove(asList(properties));
+	}
+	
+
+	/**
+	 * Returns the value of a given property in this group.
+	 *
 	 * @throws IllegalStateException if a property with a given name does not exist in this collection
 	 */
 	public Property prop(@NonNull String name) {
@@ -96,9 +166,18 @@ public class Properties implements Streamable<Property> {
 	}
 
 	/**
-	 * Returns <code>true</code> if this collection has no properties.
-	 * 
-	 * @return <code>true</code> if this collection has no properties
+	 * Returns the value of a given property in this group, if it exist. 
+	 * Otherwise returns a property with a given fallback value.
+	 *
+	 */
+	public Property prop(@NonNull String name, @NonNull Object fallbackValue) {
+
+		return has(name) ? prop(name) : Property.prop(name,fallbackValue);
+
+	}
+
+	/**
+	 * Returns <code>true</code> if this group has no properties.
 	 */
 	public boolean empty() {
 		return properties.isEmpty();
@@ -112,38 +191,13 @@ public class Properties implements Streamable<Property> {
 	public int size() {
 		return properties.size();
 	}
-	
-	/**
-	 * Returns this properties as an array.
-	 * @return the properties
-	 */
-	public Property[] toArray() {
-		return properties.values().toArray(new Property[properties.size()]);
-	}
 
 	@Override
 	public String toString() {
 		
-		Collection<?> copy = null;
+		Function<Entry<String,Property>,String> tostring = $->format("%s=%s",$.getKey(),$.getValue().value());
 		
-		synchronized(properties) {
-			copy = new ArrayList<>(properties.values());
-		}
-		
-		return toString(copy,100);
-	}
-
-	private String toString(Collection<?> collection, int maxLen) {
-		StringBuilder builder = new StringBuilder();
-		builder.append("[");
-		int i = 0;
-		for (Iterator<?> iterator = collection.iterator(); iterator.hasNext() && i < maxLen; i++) {
-			if (i > 0)
-				builder.append(", ");
-			builder.append(iterator.next());
-		}
-		builder.append("]");
-		return builder.toString();
+		return format("[%s]", properties.entrySet().stream().map(tostring).collect(joining(",")));
 	}
 	
 }

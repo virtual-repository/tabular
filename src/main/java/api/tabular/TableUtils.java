@@ -183,7 +183,7 @@ public class TableUtils {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	
-	private static <T> Stream<T> streamof(Iterable<T> vals) {
+	public static <T> Stream<T> streamof(Iterable<T> vals) {
 		
 		return stream(vals.spliterator(),false);
 	}

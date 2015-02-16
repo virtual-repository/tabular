@@ -48,7 +48,9 @@ public class Dsl {
 	public static interface TableClause {
 
 		/**
-		 * Creates an instance from columns and rows.
+		 * Sets the columns and rows of the table.
+		 * <p>
+		 * The rows will be 
 		 * 
 		 * */
 		Table with(String[] cols, String[] ... rows);
