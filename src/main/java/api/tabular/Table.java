@@ -1,10 +1,13 @@
 package api.tabular;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.function.UnaryOperator;
 
 import api.tabular.utils.MaterialisedTable;
 import api.tabular.utils.Streamable;
+
 
 
 
@@ -42,5 +45,26 @@ public interface Table extends Streamable<Row> {
 	 */
 	boolean materialised();
 		
+	
+	/**
+	 * Returns a streamed table obtained transforming the rows of this table. 
+	 */
+	default Table with(UnaryOperator<Row> transform) {
+	
+		final Iterator<Row> current = iterator();
+		
+		return new StreamedTable(columns(),new Iterator<Row>() {
+			
+			@Override
+			public boolean hasNext() {
+				return current.hasNext();
+			}
+			
+			@Override
+			public Row next() {
+				return transform.apply(current.next());
+			}
+		});
+	}
 	
 }

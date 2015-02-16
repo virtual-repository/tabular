@@ -144,6 +144,8 @@ public class Row implements Streamable<String> {
 	 * Removes given columns from this row.
 	 */
 	public Row remove(Collection<String> columns) {
+		
+		;
 		for (String col : columns)
 			data.remove(col);
 		return this;
@@ -154,6 +156,42 @@ public class Row implements Streamable<String> {
 	 */
 	public Row remove(Row row) {
 		return remove(data.keySet());
+	}
+	
+	
+	/**
+	 * Returns a new row with some of the columns in this row.
+	 */
+	public Row extract(Column ... columns) {
+		return extract(Arrays.asList(columns));
+	}
+	
+	/**
+	 * Returns a new row with some of the columns in this row.
+	 */
+	public Row extract(Iterable<Column> columns) {
+		return extract(streamof(columns).map(Column::name).collect(toList()));
+	}
+	
+	/**
+	 * Returns a new row with some of the columns in this row.
+	 */
+	public Row extract(String ... columns) {
+		return extract(Arrays.asList(columns));
+	}
+	
+	/**
+	 * Returns a new row with some of the columns in this row.
+	 */
+	public Row extract(Collection<String> columns) {
+		
+		Row row = new Row();
+		
+		for (String col : columns)
+			if (has(col))
+				row.set(col, get(col));
+		
+		return row;
 	}
 	
 	/**

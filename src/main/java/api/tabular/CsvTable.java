@@ -127,11 +127,10 @@ public class CsvTable extends AbstractTable {
 
 			Map<String, String> data = new HashMap<>();
 
+			//synthesise missing columns from first row
 			if (csv.columns().isEmpty())
-				for (int i=0; i< row.length; i++) {
-					System.out.println("adding to "+csv);
+				for (int i=0; i< row.length; i++)
 					csv.with(col("column-"+i));
-				}
 					
 			for (int i = 0; i < csv.columns().size(); i++)
 				if (i<row.length)
@@ -159,6 +158,7 @@ public class CsvTable extends AbstractTable {
 		@SneakyThrows
 		private void parseHeader() {
 			
+			//consume header
 			String[] cols = reader.readNext();
 			
 			//use header only if no columns are specified, otherwise ignore it.

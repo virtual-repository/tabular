@@ -128,11 +128,14 @@ public class Csv {
 		
 		CSVWriter csvwriter = new CSVWriter(writer,delimiter,quote);
 		
-		List<Column> columns = columns().isEmpty() ? table.columns() :columns();
+		//priority to directives, fallback to table
+		List<Column> columns = columns().isEmpty() ? table.columns() : columns();
 		
 		if (hasHeader) {
 			
-			csvwriter.writeNext(columns.stream().map(Column::name).collect(toList()).toArray(new String[0]));
+			List<String> colcoll = columns.stream().map(Column::name).collect(toList());
+			
+			csvwriter.writeNext(colcoll.toArray(new String[0]));
 		
 		}
 		
