@@ -1,8 +1,16 @@
 package api.tabular;
 
+import static java.nio.file.Files.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.Iterator;
+
+import lombok.Cleanup;
+import lombok.SneakyThrows;
 
 
 public class Dsl {
@@ -59,7 +67,7 @@ public class Dsl {
 		 * Creates an instance from  a given {@link Csv} dataset.
 		 * @see CsvTable#CsvTable(Csv, InputStream)
 		 */
-		StreamClause from(Csv csv);
+		SourceClause from(Csv csv);
 		
 
 		/**
@@ -129,7 +137,7 @@ public class Dsl {
 		
 	}
 	
-	public static interface StreamClause {
+	public static interface SourceClause {
 		
 		/**
 		 * Provides a stream with the CSV data.
@@ -139,13 +147,53 @@ public class Dsl {
 		/**
 		 * Provides a String with the CSV data.
 		 */
-		Table in(String data);
+		default Table in(String data) {
+			return in(new ByteArrayInputStream(data.getBytes()));
+		}
 		
 		/**
 		 * Provides a String with the CSV data file.
 		 */
-		Table at(Path file);
+		@SneakyThrows
+		default Table at(Path file) {
+				
+			if (!isReadable(file) || isDirectory(file))
+				throw new IllegalArgumentException(file+" is unreadable or a directory.");
+			
+			return in(new FileInputStream(file.toFile()));
+			
+		}
 		
 		
 	}
+	
+	public static interface SinkClause {
+		
+		/**
+		 * Sets a given stream as the sink.
+		 * <p>
+		 * Clients are responsible for closing the stream.
+		 */
+		void to(OutputStream stream);
+		
+		/**
+		 * Sets a given file as the sink.
+		 */
+		@SneakyThrows
+		default void at(Path file) {
+				
+			if (isDirectory(file) || (exists(file) && !isWritable(file)))
+				throw new IllegalArgumentException(file+" is unwritable or a directory.");
+			
+			@Cleanup
+			OutputStream stream = newOutputStream(file);
+		
+			to(stream);
+			
+		}
+		
+		
+	}
+	
+	
 }

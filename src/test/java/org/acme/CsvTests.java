@@ -1,11 +1,15 @@
 package org.acme;
 
 import static api.tabular.Tables.*;
+import static java.nio.file.Files.*;
 import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.List;
+
+import lombok.SneakyThrows;
 
 import org.junit.Test;
 
@@ -213,7 +217,7 @@ public class CsvTests {
 		
 		Csv csv = csv().hasHeader(true); //just to emphasise default
 		
-		InputStream stream = csv.serialise(created);
+		InputStream stream = csv.convert(created);
 		
 		assertEquals(created.columns(),csv.columns());
 		
@@ -231,7 +235,7 @@ public class CsvTests {
 		
 		Csv csv = csv().hasHeader(true).with("c1"); //just to emphasise default
 		
-		InputStream stream = csv.serialise(created);
+		InputStream stream = csv.convert(created);
 		
 		Table parsed = table().from(csv()).in(stream).materialise();
 		
@@ -247,7 +251,7 @@ public class CsvTests {
 		
 		Csv csv = csv().hasHeader(false);
 		
-		InputStream stream = csv.serialise(created);
+		InputStream stream = csv.convert(created);
 		
 		assertEquals(created.columns(),csv.columns());
 
@@ -268,12 +272,28 @@ public class CsvTests {
 		
 		Csv csv = csv().hasHeader(true).delimiter(';').quote('\''); 
 		
-		InputStream stream = csv.serialise(created);
+		InputStream stream = csv.convert(created);
 		
 		Table parsed = table().from(csv).in(stream).materialise();
 		
 		assertEquals(created,parsed);
 		
+	}
+	
+	@Test @SneakyThrows
+	public void serialise_to_file() {
+
+		Path path = createTempFile("test", "tmp"); 
+				
+		Table created = table().with($("c1","c2"), $("1","2"),$("3","4"));
+		
+		csv().serialise(created).at(path);
+		
+		Table parsed = csv().parse().at(path).materialise();
+		
+		assertEquals(created,parsed);
+		
+		delete(path);
 	}
 	
 	

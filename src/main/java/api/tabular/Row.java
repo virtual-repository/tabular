@@ -112,10 +112,21 @@ public class Row implements Streamable<String> {
 	}
 	
 	/**
-	 * Adds the values of another row to this row.
+	 * Adds the values of given rows to this row.
+	 * <p>
+	 * Rows are processed in order, thus so does overwriting. 
 	 */
-	public Row merge(Row row) {
-		data.putAll(row.data);
+	public Row merge(Row ... rows) {
+		return merge(asList(rows));
+	}
+	
+	/**
+	 * Adds the values of given rows to this row.
+	 * <p>
+	 * Rows are processed in order, thus so does overwriting. 
+	 */
+	public Row merge(Iterable<Row> rows) {
+		streamof(rows).forEach(r->data.putAll(r.data));
 		return this;
 	}
 

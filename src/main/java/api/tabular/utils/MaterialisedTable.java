@@ -27,4 +27,9 @@ public interface MaterialisedTable extends Table {
 	 * Remove rows from this table.
 	 */
 	MaterialisedTable remove(Iterable<Row> rows);
+	
+	/**
+	 * Returns the number of rows in this table.
+	 */
+	int size();
 }

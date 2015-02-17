@@ -1,19 +1,18 @@
 package api.tabular;
 
+import static api.tabular.TableUtils.*;
 import static java.lang.Integer.*;
-import static java.nio.file.Files.*;
 import static java.util.Arrays.*;
 import static java.util.stream.Collectors.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
-import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import lombok.Cleanup;
@@ -21,6 +20,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import api.tabular.Dsl.SinkClause;
+import api.tabular.Dsl.SourceClause;
 import au.com.bytecode.opencsv.CSVWriter;
 
 /**
@@ -100,57 +101,70 @@ public class Csv {
 	/**
 	 * A convenience to specify columns in fluent fashion.
 	 */
-	public Csv with(@NonNull String ... cols) {
-		columns.addAll(asList(cols).stream().map(Column::new).collect(toList()));
+	public Csv with(@NonNull Iterable<Column> cols) {
+		streamof(cols).forEach(columns::add);
 		return this;
 	}
 	
-	@SneakyThrows
-	public Csv serialise(Table table, Path file) {
+	/**
+	 * A convenience to specify columns in fluent fashion.
+	 */
+	public Csv with(@NonNull String ... cols) {
+		return with(asList(cols));
+	}
 	
-		@Cleanup
-		OutputStream stream = newOutputStream(file);
-	
-		return serialise(table,stream);
-			
+	/**
+	 * A convenience to specify columns in fluent fashion.
+	 */
+	public Csv with(@NonNull Collection<String> cols) {
+		return with(cols.stream().map(Column::new).collect(toList()));
 	}
 	
 	/**
 	 * Serialises a table using these directives.
-	 * <p>
-	 * Clients are responsible for closing the stream in input.
 	 * 
 	 */
 	@SneakyThrows
-	public Csv serialise(Table table, OutputStream stream) {
+	public SinkClause serialise(Table table) {
 		
-		Writer writer = new OutputStreamWriter(stream, encoding);
 		
-		CSVWriter csvwriter = new CSVWriter(writer,delimiter,quote);
+		return stream->{
 		
-		//priority to directives, fallback to table
-		List<Column> columns = columns().isEmpty() ? table.columns() : columns();
-		
-		if (hasHeader) {
+			try {
+				
+				Writer writer = new OutputStreamWriter(stream, encoding);
+				
+				@Cleanup
+				CSVWriter csvwriter = new CSVWriter(writer,delimiter,quote);
+				
+				//priority to directives, fallback to table
+				List<Column> columns = columns().isEmpty() ? table.columns() : columns();
+				
+				if (hasHeader) {
+					
+					List<String> colcoll = columns.stream().map(Column::name).collect(toList());
+					
+					csvwriter.writeNext(colcoll.toArray(new String[0]));
+				
+				}
+				
+				table.stream().map(
+						        r->columns.stream().map(c->r.get(c.name())).filter(c->c!=null && !c.isEmpty()).collect(toList()))
+							  .map(l->l.toArray(new String[0]))
+							  .forEachOrdered(csvwriter::writeNext);
+				
+				
+				csvwriter.flush();
+				
+				if (columns().isEmpty())
+					columns().addAll(columns);
 			
-			List<String> colcoll = columns.stream().map(Column::name).collect(toList());
-			
-			csvwriter.writeNext(colcoll.toArray(new String[0]));
-		
-		}
-		
-		table.stream().map(
-				        r->columns.stream().map(c->r.get(c.name())).filter(c->c!=null && !c.isEmpty()).collect(toList()))
-					  .map(l->l.toArray(new String[0]))
-					  .forEachOrdered(csvwriter::writeNext);
-		
-		
-		csvwriter.flush();
-		
-		if (columns().isEmpty())
-			columns().addAll(columns);
-		
-		return this;
+			}
+			catch(Exception e) {
+				
+				throw (RuntimeException) e;
+			}
+		};
 	}
 	
 	/**
@@ -159,15 +173,23 @@ public class Csv {
 	 * Clients are responsible for closing the stream.
 	 */
 	@SneakyThrows
-	public InputStream serialise(Table table) {
+	public InputStream convert(Table table) {
 		
 		@Cleanup
 		ByteArrayOutputStream stream = new ByteArrayOutputStream(512);
 		
-		serialise(table, stream);
+		serialise(table).to(stream);
 		
 		return new ByteArrayInputStream(stream.toByteArray());
 		
+	}
+	
+	/**
+	 * Parses a given table using this directives.
+	 */
+	public SourceClause parse() {
+		
+		return stream->new CsvTable(this,stream);
 	}
 	
 }

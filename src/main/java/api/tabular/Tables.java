@@ -3,10 +3,6 @@ package api.tabular;
 import static java.util.Arrays.*;
 import static java.util.stream.Collectors.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,10 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.NonNull;
-import lombok.SneakyThrows;
 import api.tabular.Dsl.NameClause;
 import api.tabular.Dsl.RowClause;
-import api.tabular.Dsl.StreamClause;
+import api.tabular.Dsl.SourceClause;
 import api.tabular.Dsl.TableClause;
 import api.tabular.Dsl.ValueClause;
 
@@ -144,25 +139,9 @@ public class Tables {
 			}
 			
 			@Override
-			public StreamClause from(Csv csv) {
+			public SourceClause from(Csv csv) {
 				
-				return new StreamClause() {
-					
-					@Override
-					public Table in(String data) {
-						return in(new ByteArrayInputStream(data.getBytes()));
-					}
-					
-					@Override
-					public Table in(InputStream stream) {
-						return new CsvTable(csv,stream);
-					}
-					
-					@Override @SneakyThrows
-					public Table at(Path file) {
-						return new CsvTable(csv,new FileInputStream(file.toFile()));
-					}
-				};
+				return stream -> new CsvTable(csv,stream);
 				
 			}
 			

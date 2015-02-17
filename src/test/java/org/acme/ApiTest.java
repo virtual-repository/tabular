@@ -108,7 +108,7 @@ public class ApiTest {
 		assertEquals("newvalue",r.set("c2","newvalue").get("c2"));
 		
 		assertTrue(r.remove("c2","c3").size()==1);
-		
+
 	}
 	
 	@Test

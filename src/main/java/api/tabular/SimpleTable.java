@@ -72,5 +72,9 @@ public class SimpleTable extends AbstractTable implements MaterialisedTable {
 	}
 	
 
+	@Override
+	public int size() {
+		return rows.size();
+	}
 	
 }

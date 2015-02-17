@@ -193,8 +193,9 @@ public class TableUtils {
 		return stream(vals.spliterator(),parallel);
 	}
 	
-	private static String join(Stream<String> vals) {
+	public static String join(Stream<String> vals) {
 		
 		return vals.filter(s->s!=null).collect(joining());
 	}
+	
 }
