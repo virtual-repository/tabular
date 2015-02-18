@@ -114,8 +114,8 @@ public class Row implements Streamable<String> {
 	/**
 	 * Adds a value of a given column to this row.
 	 */
-	public Row set(String column, String value) {
-		data.put(column, value);
+	public Row set(String column, Object value) {
+		data.put(column, value.toString());
 		return this;
 	}
 	
@@ -164,9 +164,9 @@ public class Row implements Streamable<String> {
 	 */
 	public Row remove(Collection<String> columns) {
 		
-		;
 		for (String col : columns)
 			data.remove(col);
+		
 		return this;
 	}
 	
