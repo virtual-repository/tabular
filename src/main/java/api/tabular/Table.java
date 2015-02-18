@@ -67,4 +67,14 @@ public interface Table extends Streamable<Row> {
 		});
 	}
 	
+	
+	/**
+	 * Returns a streamed copy of this table. 
+	 */
+	default Table copy() {
+		
+		return with(Row::new);
+		
+	}
+	
 }

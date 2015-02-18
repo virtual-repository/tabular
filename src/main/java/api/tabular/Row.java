@@ -34,6 +34,14 @@ public class Row implements Streamable<String> {
 		this(new HashMap<>());
 	}
 	
+	/**
+	 * Copy constructor
+	 */
+	public Row(Row row) {
+		this();
+		merge(row);
+	}
+	
 	@Override
 	public Iterator<String> iterator() {
 		return data.values().iterator();
