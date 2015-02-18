@@ -1,6 +1,6 @@
 package api.tabular;
 
-import static api.tabular.TableUtils.*;
+import static api.tabular.utils.TableUtils.*;
 import static java.lang.String.*;
 import static java.util.Arrays.*;
 import static java.util.Collections.*;

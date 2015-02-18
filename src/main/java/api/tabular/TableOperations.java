@@ -1,26 +1,30 @@
 package api.tabular;
 
+import static api.tabular.utils.TableUtils.*;
 import static java.util.Arrays.*;
 import static java.util.function.Function.*;
 import static java.util.stream.Collectors.*;
-import static java.util.stream.StreamSupport.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
+import api.tabular.utils.TableUtils;
 
 /**
  * Table processing facilities.
  */
-public class TableUtils {
+public class TableOperations {
 
+	private static BiConsumer<Row, Row> joinfunction = (s,t) -> s.merge(t);
+
+	
 	/**
 	 * Indexes a table by the (concatenated) values of one or more columns.
 	 */
@@ -37,7 +41,7 @@ public class TableUtils {
 			public Map<String, Row> using(@NonNull Iterable<String> cols) {
 				
 				//key is concatenation of column values
-				Function<Row,String> key = r -> join(streamof(cols).map(r::get));
+				Function<Row,String> key = r -> TableUtils.join(streamof(cols).map(r::get));
 				
 				//deal with duplicates by picking latest (random choice)
 				BinaryOperator<Row> picklatestduplicate = (r1,r2)->r2;
@@ -70,7 +74,7 @@ public class TableUtils {
 			
 			return new JoinClause() {
 				
-				BiConsumer<Row, Row> function = (s,t) -> s.merge(t);
+				BiConsumer<Row, Row> function = joinfunction;
 				Consumer<Row> fallback = (__) -> {};
 				
 				@Override
@@ -91,15 +95,15 @@ public class TableUtils {
 				@Override
 				public void basedOn(@NonNull Iterable<Match> matches) {
 					
-					Iterable<String> targetcols = streamof(matches).map(Match::col2).collect(toList());
+					List<String> targetcols = streamof(matches).map(Match::col2).collect(toList());
 					
 					Map<String,Row> targetIndex = index(target).using(targetcols);
 					
 					table.forEach(row-> {
 						
-						Iterable<String> sourcecols = streamof(matches).map(Match::col1).collect(toList());
+						List<String> sourcecols = streamof(matches).map(Match::col1).collect(toList());
 						
-						String key  = join(streamof(sourcecols).map(row::get));
+						String key  = TableUtils.join(streamof(sourcecols).map(row::get));
 						
 						if (targetIndex.containsKey(key))
 							function.accept(row,targetIndex.get(key));
@@ -107,6 +111,18 @@ public class TableUtils {
 							fallback.accept(row);
 						
 					});
+					
+					//add columns as we know the consumer function
+					//unless they are matching columns that already exist.
+					if (function==joinfunction)
+						
+						target.columns().stream()
+						.filter(c ->
+						!table.columns().contains(c) || !targetcols.contains(c.name())
+						)
+						.forEach(table.columns()::add);
+						
+					
 				}
 				
 				@Override
@@ -178,24 +194,6 @@ public class TableUtils {
 		 */
 		 void basedOn(Iterable<Match> matches);
 		 
-	}
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	
-	public static <T> Stream<T> streamof(Iterable<T> vals) {
-		
-		return streamof(vals,false);
-	}
-	
-	public static <T> Stream<T> streamof(Iterable<T> vals, boolean parallel) {
-		
-		return stream(vals.spliterator(),parallel);
-	}
-	
-	public static String join(Stream<String> vals) {
-		
-		return vals.filter(s->s!=null).collect(joining());
 	}
 	
 }

@@ -1,6 +1,6 @@
 package api.tabular.utils;
 
-import static api.tabular.TableUtils.*;
+import static api.tabular.utils.TableUtils.*;
 
 import java.util.function.Consumer;
 import java.util.stream.Stream;
