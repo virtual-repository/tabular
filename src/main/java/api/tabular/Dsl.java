@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Iterator;
 
 import lombok.Cleanup;
@@ -84,6 +85,11 @@ public class Dsl {
 		 * Adds columns to the table.
 		 */
 		TableClause cols(Iterable<Column> cols);
+		
+		/**
+		 * Adds columns to the table.
+		 */
+		TableClause cols(Collection<String> cols);
 		
 		/**
 		 * Adds one or more rows to the table.

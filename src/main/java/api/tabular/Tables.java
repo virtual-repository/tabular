@@ -4,6 +4,7 @@ import static java.util.Arrays.*;
 import static java.util.stream.Collectors.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -160,6 +161,12 @@ public class Tables {
 			public TableClause cols(@NonNull String... $) {
 				
 				return cols(asList($).stream().map(name->col(name)).collect(toList()));
+			}
+			
+			@Override
+			public TableClause cols(@NonNull Collection<String>  $) {
+				
+				return cols($.stream().map(name->col(name)).collect(toList()));
 			}
 			
 			@Override
