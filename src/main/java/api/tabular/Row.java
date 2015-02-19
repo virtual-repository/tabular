@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiConsumer;
 
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
@@ -26,7 +27,7 @@ import api.tabular.utils.Streamable;
 @EqualsAndHashCode
 @ToString
 public class Row implements Streamable<String> {
-
+	
 	@NonNull
 	private Map<String,String> data;
 	
@@ -45,6 +46,15 @@ public class Row implements Streamable<String> {
 	@Override
 	public Iterator<String> iterator() {
 		return data.values().iterator();
+	}
+	
+	/**
+	 * Applies a function to each (column,value) pair.
+	 */
+	public void forEach(BiConsumer<String,String> consumer) {
+		
+		data.entrySet().forEach(e->consumer.accept(e.getKey(), e.getValue()));
+		
 	}
 
 	/**
@@ -109,6 +119,14 @@ public class Row implements Streamable<String> {
 	 */
 	public Set<String> columns() {
 		return new HashSet<>(data.keySet());
+	}
+
+	/**
+	 * Adds a value of a given column to this row.
+	 */
+	public Row set(Column column, Object value) {
+		data.put(column.name(), value.toString());
+		return this;
 	}
 	
 	/**
