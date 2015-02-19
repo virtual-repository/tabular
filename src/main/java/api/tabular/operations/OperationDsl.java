@@ -2,6 +2,7 @@ package api.tabular.operations;
 
 import static java.util.Arrays.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -14,8 +15,11 @@ import api.tabular.operations.TableOperations.Match;
 public class OperationDsl {
 
 	
-public static interface IndexClause {
+	public static interface IndexClause {
 		
+		/**
+		  * The columns to index on.
+		  */
 		default Map<String, Row> using(@NonNull String... cols) {
 			return using(asList(cols));
 		}
@@ -24,6 +28,22 @@ public static interface IndexClause {
 		  * The columns to index on.
 		  */
 		 Map<String,Row> using(Iterable<String> cols);
+
+	}
+	
+	public static interface GroupClause {
+		
+		/**
+		  * The columns to group by.
+		  */
+		default Map<String, List<Row>> by(@NonNull String... cols) {
+			return by(asList(cols));
+		}
+		 
+		 /**
+		  * The columns to group by.
+		  */
+		 Map<String,List<Row>> by(Iterable<String> cols);
 
 	}
 	

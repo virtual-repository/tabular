@@ -18,6 +18,7 @@ import lombok.NonNull;
 import api.tabular.Row;
 import api.tabular.Table;
 import api.tabular.operations.OperationDsl.ExistMapClause;
+import api.tabular.operations.OperationDsl.GroupClause;
 import api.tabular.operations.OperationDsl.IndexClause;
 import api.tabular.operations.OperationDsl.JoinClause;
 import api.tabular.operations.OperationDsl.WithClause;
@@ -45,6 +46,21 @@ public class TableOperations {
 			BinaryOperator<Row> picklatestduplicate = (r1,r2)->r2;
 			
 			return table.stream().filter(r->!key.apply(r).isEmpty()).collect(toMap(key,identity(),picklatestduplicate));
+		
+		};
+	}
+	
+	/**
+	 * Groups a table by the (concatenated) values of one or more columns.
+	 */
+	public static GroupClause group(@NonNull Table table) {
+		
+		return (@NonNull Iterable<String> cols) -> {
+			
+			//key is concatenation of column values
+			Function<Row,String> key = r -> TableUtils.join(streamof(cols).map(r::get));
+			
+			return table.stream().filter(r->!key.apply(r).isEmpty()).collect(groupingBy(key,toList()));
 		
 		};
 	}

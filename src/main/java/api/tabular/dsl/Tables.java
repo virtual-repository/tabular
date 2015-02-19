@@ -81,6 +81,20 @@ public class Tables {
 	/**
 	 * A new row.
 	 */
+	public static Row row(String[] cols, String[] vals) {
+		
+		Row row = new Row();
+		
+		for (int i = 0; i < cols.length; i++)
+			if (i<vals.length)
+				row.set(cols[i], vals[i]);
+		
+		return row;
+	}
+	
+	/**
+	 * A new row.
+	 */
 	public static NameClause row() {
 		
 		final Map<String,String> map = new HashMap<>();
