@@ -41,6 +41,15 @@ public class Properties implements Streamable<Property> {
 	public static Properties props(@NonNull Property ... properties) {
 		return props().add(properties);
 	}
+
+	/**
+	 * Add given properties to this group.
+	 */
+	public Properties add(@NonNull String ... props) {
+		
+		return add(asList(props).stream().map(Property::prop).collect(toList()));
+
+	}
 	
 	/**
 	 * Add given properties to this group.
@@ -170,7 +179,7 @@ public class Properties implements Streamable<Property> {
 	 * Otherwise returns a property with a given fallback value.
 	 *
 	 */
-	public Property prop(@NonNull String name, @NonNull Object fallbackValue) {
+	public Property propOr(@NonNull String name, @NonNull Object fallbackValue) {
 
 		return has(name) ? prop(name) : Property.prop(name,fallbackValue);
 

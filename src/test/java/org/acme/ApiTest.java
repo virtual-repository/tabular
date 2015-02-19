@@ -60,7 +60,7 @@ public class ApiTest {
 		}
 		catch(IllegalStateException matternot) {}
 		
-		assertEquals(prop("bad","default"),ps.prop("bad", "default"));
+		assertEquals(prop("bad","default"),ps.propOr("bad", "default"));
 		
 		Property p4 = prop("n4","v4");
 		
@@ -86,6 +86,9 @@ public class ApiTest {
 	
 		assertEquals("c", c.name());
 		assertEquals(c, col("c"));
+		
+		c.properties().add("tag");
+		c.properties().add(prop("some").value("val"),prop("name","val"));
 		
 	}
 	

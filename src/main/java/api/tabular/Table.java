@@ -16,7 +16,7 @@ import api.tabular.utils.Streamable;
  * <p>
  * The table is semi-structured, i.e. does not enforce uniformity. 
  * Columns indicate row structure, but neither prescribe it nor necessarily fully describe it:
- * rows <em>may</em> have more or less columns than the table indicate.
+ * rows <em>may</em> have more or less columns than the table indicates.
  * <p>
  * Depending on the implementation, not all rows may be in memory at the same time.
  * <am>Materialised</em> tables have this property and can be iterated over multiple times.
