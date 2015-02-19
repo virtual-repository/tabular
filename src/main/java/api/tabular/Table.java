@@ -1,5 +1,6 @@
 package api.tabular;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -48,12 +49,15 @@ public interface Table extends Streamable<Row> {
 	
 	/**
 	 * Returns a streamed table obtained transforming the rows of this table. 
+	 * <p>
+	 * The table shares the individual columns with this table, in the object reference sense but collects
+	 * them independently (adding or removing columns from one will not have an effect on the other).
 	 */
 	default Table with(UnaryOperator<Row> transform) {
 	
 		final Iterator<Row> current = iterator();
 		
-		return new StreamedTable(columns(),new Iterator<Row>() {
+		return new StreamedTable(new ArrayList<>(columns()),new Iterator<Row>() {
 			
 			@Override
 			public boolean hasNext() {
