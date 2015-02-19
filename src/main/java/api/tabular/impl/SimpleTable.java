@@ -1,4 +1,4 @@
-package api.tabular;
+package api.tabular.impl;
 
 import static java.util.Arrays.*;
 import static java.util.stream.Collectors.*;
@@ -10,6 +10,9 @@ import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.ToString;
+import api.tabular.Column;
+import api.tabular.Row;
+import api.tabular.Table;
 import api.tabular.utils.MaterialisedTable;
 
 /**

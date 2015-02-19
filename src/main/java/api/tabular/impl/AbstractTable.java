@@ -1,4 +1,4 @@
-package api.tabular;
+package api.tabular.impl;
 
 import static api.tabular.Properties.*;
 
@@ -8,6 +8,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import api.tabular.Column;
+import api.tabular.Properties;
+import api.tabular.Row;
+import api.tabular.Table;
 import api.tabular.utils.Streamable;
 
 

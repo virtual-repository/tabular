@@ -20,8 +20,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
-import api.tabular.Dsl.SinkClause;
-import api.tabular.Dsl.SourceClause;
+import api.tabular.dsl.Dsl.SinkClause;
+import api.tabular.dsl.Dsl.SourceClause;
+import api.tabular.impl.CsvTable;
 import au.com.bytecode.opencsv.CSVWriter;
 
 /**

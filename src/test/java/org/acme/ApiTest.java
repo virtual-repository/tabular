@@ -1,7 +1,7 @@
 package org.acme;
 
 
-import static api.tabular.Tables.*;
+import static api.tabular.dsl.Tables.*;
 import static java.util.Arrays.*;
 import static java.util.stream.Collectors.*;
 import static org.junit.Assert.*;

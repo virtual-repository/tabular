@@ -1,4 +1,4 @@
-package api.tabular;
+package api.tabular.dsl;
 
 import static java.nio.file.Files.*;
 
@@ -10,6 +10,11 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Iterator;
 
+import api.tabular.Column;
+import api.tabular.Csv;
+import api.tabular.Row;
+import api.tabular.Table;
+import api.tabular.impl.CsvTable;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 

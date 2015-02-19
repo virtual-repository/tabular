@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.function.UnaryOperator;
 
+import api.tabular.impl.SimpleTable;
+import api.tabular.impl.StreamedTable;
 import api.tabular.utils.MaterialisedTable;
 import api.tabular.utils.Streamable;
 

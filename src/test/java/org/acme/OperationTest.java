@@ -1,7 +1,7 @@
 package org.acme;
 
-import static api.tabular.TableOperations.*;
-import static api.tabular.Tables.*;
+import static api.tabular.dsl.Tables.*;
+import static api.tabular.operations.TableOperations.*;
 import static org.junit.Assert.*;
 
 import org.junit.Test;

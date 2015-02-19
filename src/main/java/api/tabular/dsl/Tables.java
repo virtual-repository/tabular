@@ -1,4 +1,4 @@
-package api.tabular;
+package api.tabular.dsl;
 
 import static java.util.Arrays.*;
 import static java.util.stream.Collectors.*;
@@ -11,11 +11,20 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.NonNull;
-import api.tabular.Dsl.NameClause;
-import api.tabular.Dsl.RowClause;
-import api.tabular.Dsl.SourceClause;
-import api.tabular.Dsl.TableClause;
-import api.tabular.Dsl.ValueClause;
+import api.tabular.Column;
+import api.tabular.Csv;
+import api.tabular.Properties;
+import api.tabular.Property;
+import api.tabular.Row;
+import api.tabular.Table;
+import api.tabular.dsl.Dsl.NameClause;
+import api.tabular.dsl.Dsl.RowClause;
+import api.tabular.dsl.Dsl.SourceClause;
+import api.tabular.dsl.Dsl.TableClause;
+import api.tabular.dsl.Dsl.ValueClause;
+import api.tabular.impl.CsvTable;
+import api.tabular.impl.SimpleTable;
+import api.tabular.impl.StreamedTable;
 
 public class Tables {
 
