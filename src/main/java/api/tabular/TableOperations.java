@@ -30,27 +30,38 @@ public class TableOperations {
 	 */
 	public static IndexClause index(@NonNull Table table) {
 		
-		return new IndexClause() {
+		return (@NonNull Iterable<String> cols) -> {
 			
-			@Override
-			public Map<String, Row> using(@NonNull String... cols) {
-				return using(asList(cols));
-			}
+			//key is concatenation of column values
+			Function<Row,String> key = r -> TableUtils.join(streamof(cols).map(r::get));
 			
-			@Override
-			public Map<String, Row> using(@NonNull Iterable<String> cols) {
-				
-				//key is concatenation of column values
-				Function<Row,String> key = r -> TableUtils.join(streamof(cols).map(r::get));
-				
-				//deal with duplicates by picking latest (random choice)
-				BinaryOperator<Row> picklatestduplicate = (r1,r2)->r2;
-				
-				return table.stream().filter(r->!key.apply(r).isEmpty()).collect(toMap(key,identity(),picklatestduplicate));
-			}
+			//deal with duplicates by picking latest (random choice)
+			BinaryOperator<Row> picklatestduplicate = (r1,r2)->r2;
+			
+			return table.stream().filter(r->!key.apply(r).isEmpty()).collect(toMap(key,identity(),picklatestduplicate));
+		
 		};
 	}
 
+	
+	/**
+	 * Extracts one or more columns in preparation for lookup.
+	 */
+	public static ExistMapClause existMap(@NonNull Table table) {
+		
+		return (@NonNull Iterable<String> cols) -> {
+			
+			//key is concatenation of column values
+			Function<Row,String> key = r -> TableUtils.join(streamof(cols).map(r::get));
+			
+			//deal with duplicates by picking latest (random choice)
+			BinaryOperator<Void> picklatestduplicate = (n1,n2)->n1;
+			
+			return table.stream().filter(r->!key.apply(r).isEmpty()).collect(toMap(key,$->null,picklatestduplicate));
+		
+		};
+	}
+	
 	/**
 	 * Pairs two columns.
 	 */
@@ -148,15 +159,27 @@ public class TableOperations {
 	
 	public static interface IndexClause {
 		
-		 /**
-		  * The columns to index on.
-		  */
-		 Map<String,Row> using(String ... cols);
+		default Map<String, Row> using(@NonNull String... cols) {
+			return using(asList(cols));
+		}
 		 
 		 /**
 		  * The columns to index on.
 		  */
 		 Map<String,Row> using(Iterable<String> cols);
+
+	}
+	
+	public static interface ExistMapClause {
+		
+		default Map<String,Void> using(@NonNull String... cols) {
+			return using(asList(cols));
+		}
+		 
+		 /**
+		  * The columns to index on.
+		  */
+		Map<String,Void> using(Iterable<String> cols);
 
 	}
 	
