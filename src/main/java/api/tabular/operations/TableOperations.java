@@ -69,7 +69,7 @@ public class TableOperations {
 	/**
 	 * Extracts one or more columns in preparation for lookup.
 	 */
-	public static ExistMapClause existMap(@NonNull Table table) {
+	public static ExistMapClause xindex(@NonNull Table table) {
 		
 		return (@NonNull Iterable<String> cols) -> {
 			
