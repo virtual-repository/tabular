@@ -1,9 +1,9 @@
 package api.tabular;
 
-import static api.tabular.Properties.*;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import smallgears.api.properties.Properties;
 
 /**
  * A column of a {@link Table}, with optional {@link Properties}.
@@ -15,6 +15,6 @@ public class Column {
 	@NonNull
 	private final String name;
 	
-	private final Properties properties = props();
+	private final Properties properties = Properties.props();
 
 }

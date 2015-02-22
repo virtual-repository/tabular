@@ -1,15 +1,13 @@
 package api.tabular.impl;
 
-import static api.tabular.Properties.*;
-
 import java.util.List;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import smallgears.api.properties.Properties;
 import api.tabular.Column;
-import api.tabular.Properties;
 import api.tabular.Row;
 import api.tabular.Table;
 import api.tabular.utils.Streamable;
@@ -24,7 +22,7 @@ public abstract class AbstractTable implements Table, Streamable<Row> {
 	protected final List<Column> columns;
 	
 	
-	private final Properties properties = props();
+	private final Properties properties = Properties.props();
 	
 	
 	public final SimpleTable materialise() {

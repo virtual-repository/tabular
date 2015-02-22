@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.NonNull;
+import smallgears.api.properties.Properties;
+import smallgears.api.properties.Property;
 import api.tabular.Column;
 import api.tabular.Csv;
-import api.tabular.Properties;
-import api.tabular.Property;
 import api.tabular.Row;
 import api.tabular.Table;
 import api.tabular.dsl.Dsl.NameClause;

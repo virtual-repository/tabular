@@ -3,100 +3,31 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.virtualrepository</groupId>
 
+  <parent>
+    <groupId>com.github.smallgears</groupId>
+    <artifactId>api-parens</artifactId>
+    <version>1</version>
+  </parent>
+  
 	<artifactId>tabular</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
 
 	<dependencies>
 
-		<dependency>
+	   <dependency>
+	   	<groupId>com.github.smallgears</groupId>
+	   	<artifactId>api-kit</artifactId>
+	   	<version>[1.0.0-SNAPSHOT,2.0.0)</version>
+	   </dependency>
+
+	   <dependency>
 			<groupId>net.sf.opencsv</groupId>
 			<artifactId>opencsv</artifactId>
 			<version>2.3</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.16.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
-		</dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>1.7.2</version>
-    </dependency>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.2</version>
-			<scope>test</scope>
-		</dependency>
-
-
 	</dependencies>
-
-
-	<build>
-
-		<plugins>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-			
-		 <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>2.1.2</version>
-        <executions>
-          <execution>
-            <id>generate-sources</id>
-            <phase>install</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-		</plugins>
-
-	</build>
-
-	<profiles>
-
-		<profile>
-
-			<id>gcube-ci</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-
-			<distributionManagement>
-				<snapshotRepository>
-					<id>gcube-snapshots</id>
-					<name>gCube Snapshots</name>
-					<url>http://maven.research-infrastructures.eu:8081/nexus/content/repositories/gcube-snapshots</url>
-				</snapshotRepository>
-			</distributionManagement>
-		</profile>
-
-	</profiles>
 
 
 </project>
