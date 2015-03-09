@@ -1,4 +1,4 @@
-package api.tabular.impl;
+package smallgears.api.tabular.impl;
 
 import java.util.List;
 
@@ -7,10 +7,10 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import smallgears.api.properties.Properties;
-import api.tabular.Column;
-import api.tabular.Row;
-import api.tabular.Table;
-import api.tabular.utils.Streamable;
+import smallgears.api.tabular.Column;
+import smallgears.api.tabular.Row;
+import smallgears.api.tabular.Table;
+import smallgears.api.tabular.utils.Streamable;
 
 
 @RequiredArgsConstructor

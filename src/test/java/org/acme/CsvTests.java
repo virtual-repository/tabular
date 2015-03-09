@@ -1,8 +1,8 @@
 package org.acme;
 
-import static api.tabular.dsl.Tables.*;
 import static java.nio.file.Files.*;
 import static org.junit.Assert.*;
+import static smallgears.api.tabular.dsl.Tables.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -13,9 +13,9 @@ import lombok.SneakyThrows;
 
 import org.junit.Test;
 
-import api.tabular.Column;
-import api.tabular.Csv;
-import api.tabular.Table;
+import smallgears.api.tabular.Column;
+import smallgears.api.tabular.Csv;
+import smallgears.api.tabular.Table;
 
 public class CsvTests {
 

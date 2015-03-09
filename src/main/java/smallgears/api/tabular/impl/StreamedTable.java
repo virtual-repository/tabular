@@ -1,11 +1,11 @@
-package api.tabular.impl;
+package smallgears.api.tabular.impl;
 
 import java.util.Iterator;
 import java.util.List;
 
-import api.tabular.Column;
-import api.tabular.Row;
-import api.tabular.Table;
+import smallgears.api.tabular.Column;
+import smallgears.api.tabular.Row;
+import smallgears.api.tabular.Table;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.ToString;

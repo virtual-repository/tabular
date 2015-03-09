@@ -1,4 +1,4 @@
-package api.tabular.dsl;
+package smallgears.api.tabular.dsl;
 
 import static java.util.Arrays.*;
 import static java.util.stream.Collectors.*;
@@ -13,18 +13,18 @@ import java.util.Map;
 import lombok.NonNull;
 import smallgears.api.properties.Properties;
 import smallgears.api.properties.Property;
-import api.tabular.Column;
-import api.tabular.Csv;
-import api.tabular.Row;
-import api.tabular.Table;
-import api.tabular.dsl.Dsl.NameClause;
-import api.tabular.dsl.Dsl.RowClause;
-import api.tabular.dsl.Dsl.SourceClause;
-import api.tabular.dsl.Dsl.TableClause;
-import api.tabular.dsl.Dsl.ValueClause;
-import api.tabular.impl.CsvTable;
-import api.tabular.impl.SimpleTable;
-import api.tabular.impl.StreamedTable;
+import smallgears.api.tabular.Column;
+import smallgears.api.tabular.Csv;
+import smallgears.api.tabular.Row;
+import smallgears.api.tabular.Table;
+import smallgears.api.tabular.dsl.Dsl.NameClause;
+import smallgears.api.tabular.dsl.Dsl.RowClause;
+import smallgears.api.tabular.dsl.Dsl.SourceClause;
+import smallgears.api.tabular.dsl.Dsl.TableClause;
+import smallgears.api.tabular.dsl.Dsl.ValueClause;
+import smallgears.api.tabular.impl.CsvTable;
+import smallgears.api.tabular.impl.SimpleTable;
+import smallgears.api.tabular.impl.StreamedTable;
 
 public class Tables {
 

@@ -1,4 +1,4 @@
-package api.tabular.operations;
+package smallgears.api.tabular.operations;
 
 import static java.util.Arrays.*;
 
@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import smallgears.api.tabular.Row;
+import smallgears.api.tabular.Table;
+import smallgears.api.tabular.operations.TableOperations.Match;
 import lombok.NonNull;
-import api.tabular.Row;
-import api.tabular.Table;
-import api.tabular.operations.TableOperations.Match;
 
 public class OperationDsl {
 

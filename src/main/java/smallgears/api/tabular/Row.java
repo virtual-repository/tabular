@@ -1,8 +1,8 @@
-package api.tabular;
+package smallgears.api.tabular;
 
-import static api.tabular.utils.TableUtils.*;
 import static java.util.Arrays.*;
 import static java.util.stream.Collectors.*;
+import static smallgears.api.tabular.utils.TableUtils.*;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -13,11 +13,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
+import smallgears.api.tabular.utils.Streamable;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import api.tabular.utils.Streamable;
 
 /**
  * A mutable row in a {@link Table}.

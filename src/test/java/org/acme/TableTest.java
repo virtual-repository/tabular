@@ -1,11 +1,11 @@
 package org.acme;
 
-import static api.tabular.dsl.Tables.*;
 import static org.junit.Assert.*;
+import static smallgears.api.tabular.dsl.Tables.*;
 
 import org.junit.Test;
 
-import api.tabular.Table;
+import smallgears.api.tabular.Table;
 
 public class TableTest {
 

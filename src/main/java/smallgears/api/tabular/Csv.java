@@ -1,9 +1,9 @@
-package api.tabular;
+package smallgears.api.tabular;
 
-import static api.tabular.utils.TableUtils.*;
 import static java.lang.Integer.*;
 import static java.util.Arrays.*;
 import static java.util.stream.Collectors.*;
+import static smallgears.api.tabular.utils.TableUtils.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -15,14 +15,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import smallgears.api.tabular.dsl.Dsl.SinkClause;
+import smallgears.api.tabular.dsl.Dsl.SourceClause;
+import smallgears.api.tabular.impl.CsvTable;
 import lombok.Cleanup;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
-import api.tabular.dsl.Dsl.SinkClause;
-import api.tabular.dsl.Dsl.SourceClause;
-import api.tabular.impl.CsvTable;
 import au.com.bytecode.opencsv.CSVWriter;
 
 /**

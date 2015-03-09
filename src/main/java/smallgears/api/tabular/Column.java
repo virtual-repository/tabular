@@ -1,4 +1,4 @@
-package api.tabular;
+package smallgears.api.tabular;
 
 import lombok.Data;
 import lombok.NonNull;

@@ -1,7 +1,7 @@
-package api.tabular.utils;
+package smallgears.api.tabular.utils;
 
-import api.tabular.Row;
-import api.tabular.Table;
+import smallgears.api.tabular.Row;
+import smallgears.api.tabular.Table;
 
 /**
  * A {@link Row}-mutable {@link Table} that can be iterated over multiple times.

@@ -1,6 +1,6 @@
-package api.tabular.impl;
+package smallgears.api.tabular.impl;
 
-import static api.tabular.dsl.Tables.*;
+import static smallgears.api.tabular.dsl.Tables.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,11 +10,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import smallgears.api.tabular.Csv;
+import smallgears.api.tabular.Row;
+import smallgears.api.tabular.Table;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import api.tabular.Csv;
-import api.tabular.Row;
-import api.tabular.Table;
 import au.com.bytecode.opencsv.CSVReader;
 
 /**

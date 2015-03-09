@@ -1,9 +1,9 @@
-package api.tabular.operations;
+package smallgears.api.tabular.operations;
 
-import static api.tabular.utils.TableUtils.*;
 import static java.util.Arrays.*;
 import static java.util.function.Function.*;
 import static java.util.stream.Collectors.*;
+import static smallgears.api.tabular.utils.TableUtils.*;
 
 import java.util.List;
 import java.util.Map;
@@ -12,17 +12,17 @@ import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import smallgears.api.tabular.Row;
+import smallgears.api.tabular.Table;
+import smallgears.api.tabular.operations.OperationDsl.ExistMapClause;
+import smallgears.api.tabular.operations.OperationDsl.GroupClause;
+import smallgears.api.tabular.operations.OperationDsl.IndexClause;
+import smallgears.api.tabular.operations.OperationDsl.JoinClause;
+import smallgears.api.tabular.operations.OperationDsl.WithClause;
+import smallgears.api.tabular.utils.TableUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
-import api.tabular.Row;
-import api.tabular.Table;
-import api.tabular.operations.OperationDsl.ExistMapClause;
-import api.tabular.operations.OperationDsl.GroupClause;
-import api.tabular.operations.OperationDsl.IndexClause;
-import api.tabular.operations.OperationDsl.JoinClause;
-import api.tabular.operations.OperationDsl.WithClause;
-import api.tabular.utils.TableUtils;
 
 /**
  * Table processing facilities.

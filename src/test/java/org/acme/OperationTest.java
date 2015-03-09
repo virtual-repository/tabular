@@ -1,17 +1,17 @@
 package org.acme;
 
-import static api.tabular.dsl.Tables.*;
-import static api.tabular.operations.TableOperations.*;
 import static java.util.Arrays.*;
 import static org.junit.Assert.*;
+import static smallgears.api.tabular.dsl.Tables.*;
+import static smallgears.api.tabular.operations.TableOperations.*;
 
 import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
 
-import api.tabular.Row;
-import api.tabular.Table;
+import smallgears.api.tabular.Row;
+import smallgears.api.tabular.Table;
 
 public class OperationTest {
 

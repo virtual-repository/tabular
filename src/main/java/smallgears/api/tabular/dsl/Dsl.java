@@ -1,4 +1,4 @@
-package api.tabular.dsl;
+package smallgears.api.tabular.dsl;
 
 import static java.nio.file.Files.*;
 
@@ -10,11 +10,11 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Iterator;
 
-import api.tabular.Column;
-import api.tabular.Csv;
-import api.tabular.Row;
-import api.tabular.Table;
-import api.tabular.impl.CsvTable;
+import smallgears.api.tabular.Column;
+import smallgears.api.tabular.Csv;
+import smallgears.api.tabular.Row;
+import smallgears.api.tabular.Table;
+import smallgears.api.tabular.impl.CsvTable;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 

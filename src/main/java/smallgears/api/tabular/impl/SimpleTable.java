@@ -1,4 +1,4 @@
-package api.tabular.impl;
+package smallgears.api.tabular.impl;
 
 import static java.util.Arrays.*;
 import static java.util.stream.Collectors.*;
@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import smallgears.api.tabular.Column;
+import smallgears.api.tabular.Row;
+import smallgears.api.tabular.Table;
+import smallgears.api.tabular.utils.MaterialisedTable;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.ToString;
-import api.tabular.Column;
-import api.tabular.Row;
-import api.tabular.Table;
-import api.tabular.utils.MaterialisedTable;
 
 /**
  * A {@link Table} that materialises its elements and can be iterated over multiple times.

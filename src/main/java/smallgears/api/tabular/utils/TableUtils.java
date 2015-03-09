@@ -1,4 +1,4 @@
-package api.tabular.utils;
+package smallgears.api.tabular.utils;
 
 import static java.util.stream.Collectors.*;
 import static java.util.stream.StreamSupport.*;

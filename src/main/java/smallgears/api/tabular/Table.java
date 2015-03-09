@@ -1,4 +1,4 @@
-package api.tabular;
+package smallgears.api.tabular;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Properties;
 import java.util.function.UnaryOperator;
 
-import api.tabular.impl.SimpleTable;
-import api.tabular.impl.StreamedTable;
-import api.tabular.utils.MaterialisedTable;
-import api.tabular.utils.Streamable;
+import smallgears.api.tabular.impl.SimpleTable;
+import smallgears.api.tabular.impl.StreamedTable;
+import smallgears.api.tabular.utils.MaterialisedTable;
+import smallgears.api.tabular.utils.Streamable;
 
 
 
