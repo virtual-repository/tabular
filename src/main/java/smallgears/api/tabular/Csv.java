@@ -15,14 +15,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import smallgears.api.tabular.dsl.Dsl.SinkClause;
-import smallgears.api.tabular.dsl.Dsl.SourceClause;
-import smallgears.api.tabular.impl.CsvTable;
 import lombok.Cleanup;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import smallgears.api.tabular.dsl.Dsl.SinkClause;
+import smallgears.api.tabular.dsl.Dsl.SourceClause;
+import smallgears.api.tabular.impl.CsvTable;
 import au.com.bytecode.opencsv.CSVWriter;
 
 /**
