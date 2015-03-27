@@ -6,9 +6,9 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+//mirror directive's object hierarchy to mix in binding annotations for json
 public class Mixins {
 
-	
 	static class Csv {
 		
 		@JsonProperty char delimiter;

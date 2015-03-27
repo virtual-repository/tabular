@@ -149,10 +149,11 @@ public class Csv {
 				
 				}
 				
-				table.stream().map(
-						        r->columns.stream().map(c->r.get(c.name())).filter(c->c!=null && !c.isEmpty()).collect(toList()))
-							  .map(l->l.toArray(new String[0]))
-							  .forEachOrdered(csvwriter::writeNext);
+				
+				
+				table.stream().map(r->r.stream().limit(columns.size()).collect(toList()))
+							   .map(vals->vals.toArray(new String[0])) //retain only as many as 
+							   .forEachOrdered(csvwriter::writeNext);
 				
 				
 				csvwriter.flush();

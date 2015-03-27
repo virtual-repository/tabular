@@ -9,9 +9,15 @@ import smallgears.api.tabular.Csv;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Converts csv directives to and from json.
+ */
 @UtilityClass
 public class Mapper {
 
+	/**
+	 * A mapper staged for conversions.
+	 */
 	public static ObjectMapper mapper = new ObjectMapper();
 	
 	static {
@@ -23,11 +29,17 @@ public class Mapper {
 		
 	}
 	
+	/**
+	 * Directives in json.
+	 */
 	@SneakyThrows
 	public static String jsonOf(Csv csv) {
 		return mapper.writeValueAsString(csv);
 	}
 	
+	/**
+	 * Directives from json.
+	 */
 	@SneakyThrows
 	public static Csv csvOf(String json) {
 		return mapper.readValue(json, Csv.class);
