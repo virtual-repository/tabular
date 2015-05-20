@@ -1,6 +1,7 @@
 package smallgears.api.tabular.dsl;
 
 import static java.util.Arrays.*;
+import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
 
 import java.util.ArrayList;
@@ -9,8 +10,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 
 import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 import smallgears.api.properties.Properties;
 import smallgears.api.properties.Property;
 import smallgears.api.tabular.Column;
@@ -26,47 +34,49 @@ import smallgears.api.tabular.impl.CsvTable;
 import smallgears.api.tabular.impl.SimpleTable;
 import smallgears.api.tabular.impl.StreamedTable;
 
+@UtilityClass
 public class Tables {
-
+	
+	
 	/**
 	 * A new property.
 	 */
-	public static Property prop(String name) {
+	public Property prop(String name) {
 		return Property.prop(name);
 	}
 	
 	/**
 	 * A new property.
 	 */
-	public static Property prop(String name, Object value) {
+	public Property prop(String name, Object value) {
 		return Property.prop(name,value);
 	}
 	
 	/**
 	 * A new group of properties.
 	 */
-	public static Properties props() {
+	public Properties props() {
 		return Properties.props();
 	}
 	
 	/**
 	 * A new group of properties.
 	 */
-	public static Properties props(Property ... properties) {
+	public Properties props(Property ... properties) {
 		return Properties.props(properties);
 	}
 	
 	/**
 	 * A new column.
 	 */
-	public static Column col(String name) {
+	public Column col(String name) {
 		return new Column(name);
 	}
 	
 	/**
 	 * New {@link Csv} directives.
 	 */
-	public static Csv csv() {
+	public Csv csv() {
 		return Csv.csv();
 	}
 	
@@ -74,14 +84,14 @@ public class Tables {
 	 * A new array
 	 ***/
 	@SafeVarargs
-	public static <T> T[] $(T ... val) {
+	public <T> T[] $(T ... val) {
 		return val;
 	}
 	
 	/**
 	 * A new row.
 	 */
-	public static Row row(String[] cols, String[] vals) {
+	public Row row(String[] cols, String[] vals) {
 		
 		Row row = new Row();
 		
@@ -95,7 +105,7 @@ public class Tables {
 	/**
 	 * A new row.
 	 */
-	public static NameClause row() {
+	public NameClause row() {
 		
 		final Map<String,String> map = new HashMap<>();
 		
@@ -142,7 +152,7 @@ public class Tables {
 	/**
 	 * Creates a table with columns and rows.
 	 */
-	public static Table table(String[] cols, String[]... rows) {
+	public Table table(String[] cols, String[]... rows) {
 		
 		return table().with(cols, rows);
 	}
@@ -150,7 +160,7 @@ public class Tables {
 	/**
 	 * Creates a table.
 	 */
-	public static TableClause table() {
+	public TableClause table() {
 		
 		
 		final List<Column> cols = new ArrayList<>();
@@ -258,7 +268,7 @@ public class Tables {
 		
 	
 	
-	private static Row list2row(List<Column> cols, Iterable<String> vals) {
+	private Row list2row(List<Column> cols, Iterable<String> vals) {
 		
 		NameClause row = Tables.row();
 		
@@ -271,4 +281,42 @@ public class Tables {
 		return row.end();
 	}
 
+	
+	/**
+	 * A table collector for use with the stream API.
+	 */
+	public Collector<Row, List<Row>, Table> toTable() {
+		
+		return new Collector<Row,List<Row>,Table>() {
+	
+		
+			public Supplier<List<Row>> supplier() {
+				
+				return ()->new ArrayList<>();
+			};
+			
+			public BiConsumer<List<Row>,Row> accumulator() {
+				return (list,row) -> {
+					list.add(row);
+				};
+			};
+			
+			public BinaryOperator<List<Row>> combiner() {
+				return (list1,list2)-> {
+					list1.addAll(list2);
+					return list1;
+				};
+			};
+			
+			@Override
+			public Function<List<Row>, Table> finisher() {
+				
+				return (rows)->Tables.table().rows(rows);
+			}
+			
+			public Set<Characteristics> characteristics() {
+				return emptySet();
+			};
+		};
+	}
 }
