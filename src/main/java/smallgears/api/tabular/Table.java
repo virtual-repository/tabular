@@ -1,10 +1,14 @@
 package smallgears.api.tabular;
 
+import static smallgears.api.tabular.dsl.Tables.*;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
+import java.util.stream.Stream;
 
 import smallgears.api.tabular.impl.SimpleTable;
 import smallgears.api.tabular.impl.StreamedTable;
@@ -71,6 +75,16 @@ public interface Table extends Streamable<Row> {
 				return transform.apply(current.next());
 			}
 		});
+	}
+	
+	/**
+	 * Returns a materialised table obtained expanding the rows of this table with a given transform. 
+	 * <p>
+	 * Since the transform is arbitrary, the table has no set columns.
+	 */
+	default Table unfoldWith(Function<Row,Stream<Row>> transform) {
+	
+		return parallelStream().flatMap(row->transform.apply(row)).collect(toTable());
 	}
 	
 	
