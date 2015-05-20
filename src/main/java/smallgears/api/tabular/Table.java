@@ -1,15 +1,19 @@
 package smallgears.api.tabular;
 
+import static java.lang.String.*;
 import static smallgears.api.tabular.dsl.Tables.*;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import lombok.NonNull;
 import smallgears.api.tabular.impl.SimpleTable;
 import smallgears.api.tabular.impl.StreamedTable;
 import smallgears.api.tabular.utils.MaterialisedTable;
@@ -95,6 +99,25 @@ public interface Table extends Streamable<Row> {
 		
 		return with(Row::new);
 		
+	}
+	
+	
+	default void show(String ... cols) {
+		
+		print(System.out,cols);
+	}
+	
+	default void print(@NonNull PrintStream out, @NonNull String ... cols) {
+		
+		int count=1;
+		
+		for (Row row : this) {
+
+			out.println(format("%s: %s",cols.length==0?row: count, Stream.of(cols)
+																		.map(col->row.getOr(col,"<missing>"))
+																		.collect(Collectors.joining())));
+			count++;
+		}
 	}
 	
 }
