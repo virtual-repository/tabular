@@ -15,20 +15,22 @@ import lombok.NonNull;
 public class OperationDsl {
 
 	
-	public static interface IndexClause {
+	public static interface IndexClause<T> {
 		
 		/**
 		  * The columns to index on.
 		  */
-		default Map<String, Row> using(@NonNull String... cols) {
+		default Map<String, T> using(@NonNull String... cols) {
 			return using(asList(cols));
 		}
 		 
 		 /**
 		  * The columns to index on.
 		  */
-		 Map<String,Row> using(Iterable<String> cols);
+		 Map<String,T> using(Iterable<String> cols);
 
+		 
+		 IndexClause<String> over(String col);
 	}
 	
 	public static interface GroupClause {

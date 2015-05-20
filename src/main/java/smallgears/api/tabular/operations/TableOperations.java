@@ -12,6 +12,9 @@ import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
 import smallgears.api.tabular.Row;
 import smallgears.api.tabular.Table;
 import smallgears.api.tabular.operations.OperationDsl.ExistMapClause;
@@ -20,9 +23,6 @@ import smallgears.api.tabular.operations.OperationDsl.IndexClause;
 import smallgears.api.tabular.operations.OperationDsl.JoinClause;
 import smallgears.api.tabular.operations.OperationDsl.WithClause;
 import smallgears.api.tabular.utils.TableUtils;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
 
 /**
  * Table processing facilities.
@@ -35,19 +35,48 @@ public class TableOperations {
 	/**
 	 * Indexes a table by the (concatenated) values of one or more columns.
 	 */
-	public static IndexClause index(@NonNull Table table) {
+	public static IndexClause<Row> index(@NonNull Table table) {
 		
-		return (@NonNull Iterable<String> cols) -> {
-			
-			//key is concatenation of column values
-			Function<Row,String> key = r -> TableUtils.join(streamof(cols).map(r::get));
-			
-			//deal with duplicates by picking latest (random choice)
-			BinaryOperator<Row> picklatestduplicate = (r1,r2)->r2;
-			
-			return table.stream().filter(r->!key.apply(r).isEmpty()).collect(toMap(key,identity(),picklatestduplicate));
+		 class IndexClauseImpl implements IndexClause<Row> {
 		
+			public Map<String,Row> using(@NonNull Iterable<String> cols) {
+			
+				//key is concatenation of column values
+				Function<Row,String> key = r -> TableUtils.join(streamof(cols).map(r::get));
+				
+				//deal with duplicates by picking latest (random choice)
+				BinaryOperator<Row> picklatestduplicate = (r1,r2)->r2;
+				
+				return table.stream()
+							.filter(r->!key.apply(r).isEmpty())
+							.collect(toMap(key,identity(),picklatestduplicate));
+			
+				
+				}
+			
+			public IndexClause<String> over(@NonNull String col) {
+				
+				return new IndexClause<String> () {
+						
+						@Override
+						public IndexClause<String> over(String col) {
+							return IndexClauseImpl.this.over(col);
+						}
+						
+						@Override
+						public Map<String, String> using(Iterable<String> cols) {
+							return IndexClauseImpl.this.using(cols)
+									.entrySet()
+									.stream()
+									.collect(toMap(e->e.getKey(), e->e.getValue().get(col)));
+						}
+						
+					};
+					
+			}
 		};
+		
+		return new IndexClauseImpl();
 	}
 	
 	/**
