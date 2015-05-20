@@ -101,12 +101,17 @@ public interface Table extends Streamable<Row> {
 		
 	}
 	
-	
+	/**
+	 * Shows the values of given columns in all rows, or the rows themselves if no columns are specified.
+	 */
 	default void show(String ... cols) {
 		
 		print(System.out,cols);
 	}
 	
+	/**
+	 * Prints the values of given columns in all rows, or the rows themselves if no columns are specified.
+	 */
 	default void print(@NonNull PrintStream out, @NonNull String ... cols) {
 		
 		int count=1;
