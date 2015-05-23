@@ -118,9 +118,12 @@ public interface Table extends Streamable<Row> {
 		
 		for (Row row : this) {
 
-			out.println(format("%s: %s",cols.length==0?row: count, Stream.of(cols)
-																		.map(col->row.getOr(col,"<missing>"))
-																		.collect(Collectors.joining())));
+			out.println(format("%s:%s",cols.length==0?	row: 
+														count, Stream.of(cols)
+																.map(col-> cols.length==1?
+																		row.getOr(col,"<missing>"):
+																		format("%s=%s",col,row.getOr(col,"<missing>")))
+																.collect(Collectors.joining(", "))));
 			count++;
 		}
 	}
