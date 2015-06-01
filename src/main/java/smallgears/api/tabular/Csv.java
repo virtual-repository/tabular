@@ -143,6 +143,7 @@ public class Csv {
 				
 				if (hasHeader) {
 					
+					
 					List<String> colcoll = columns.stream().map(Column::name).collect(toList());
 					
 					csvwriter.writeNext(colcoll.toArray(new String[0]));
@@ -151,7 +152,8 @@ public class Csv {
 				
 				
 				
-				table.stream().map(r->r.stream().limit(columns.size()).collect(toList()))
+				table.stream().map(r->columns.stream().map(c->r.get(c)).collect(toList()))
+							   
 							   .map(vals->vals.toArray(new String[0])) //retain only as many as 
 							   .forEachOrdered(csvwriter::writeNext);
 				
